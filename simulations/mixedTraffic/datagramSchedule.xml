@@ -1,0 +1,5 @@
+<datagramSchedule cycleTime="100ms">
+    <event payloadSize="500B" destAddress="productionCell[0].machine[0].h[0]" destPort="1004" timeInterval="10ms"/>
+    <event payloadSize="600B" destAddress="productionCell[1].machine[1].h[1]" destPort="1004" timeInterval="20ms"/>
+    <event payloadSize="600B" destAddress="productionCell[2].machine[2].h[2]" destPort="1004" timeInterval="70ms"/>
+</datagramSchedule>
