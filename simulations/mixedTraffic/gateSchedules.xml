@@ -1,33 +1,33 @@
 <schedules>
-	<switch name="s0">
-	    <port id="0">
-	    	<schedule cycleTime="1ms">
-		        <entry>
-		            <!-- Deadline-Class Traffic -->
-		            <length>200us</length>
-		            <bitvector>00000001</bitvector>
-		        </entry>
-		        <entry>
-		            <!-- Latency-Class Traffic -->
-		            <length>200us</length>
-		            <bitvector>00000011</bitvector>
-		        </entry>
-		        <entry>
-		            <!-- Event-based Traffic  -->
-		            <length>300us</length>
-		            <bitvector>00000111</bitvector>
-		        </entry>
-		        <entry>
-		            <!-- Network Control Traffic  -->
-		            <length>100us</length>
-		            <bitvector>00001111</bitvector>
-		        </entry>
-		        <entry>
-		            <!-- Best-Effort Traffic  -->
-		            <length>200us</length>
-		            <bitvector>11111111</bitvector>
-		        </entry>
-	        </schedule>
-	    </port>
-	</switch>
+    <switch name="s0">
+        <port id="0">
+            <schedule cycleTime="1ms">
+            <entry>
+                <!-- Deadline-Class Traffic -->
+                <length>200us</length>
+                <bitvector>00000001</bitvector>
+            </entry>
+            <entry>
+                <!-- Latency-Class Traffic -->
+                <length>200us</length>
+                <bitvector>00000011</bitvector>
+            </entry>
+            <entry>
+                <!-- Event-based Traffic  -->
+                <length>300us</length>
+                <bitvector>00000111</bitvector>
+            </entry>
+            <entry>
+                <!-- Network Control Traffic  -->
+                <length>100us</length>
+                <bitvector>00001111</bitvector>
+            </entry>
+            <entry>
+                <!-- Best-Effort Traffic  -->
+                <length>200us</length>
+                <bitvector>11111111</bitvector>
+            </entry>
+        </schedule>
+        </port>
+    </switch>
 </schedules>
