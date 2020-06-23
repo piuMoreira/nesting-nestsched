@@ -29,6 +29,7 @@ simple EnhancedIeee8021qEncap like IIeee8021qEncap
         string inboundVlanIdMap = default("");
         string outboundVlanIdFilter = default("");
         string outboundVlanIdMap = default("");
+        bool tagTcpTraffic = default(false); // When true tags TCP segments from upper layer with destination port mod 8
         @display("i=block/cogwheel");
         @signal[packetDropped](type=inet::Packet);
         @statistic[packetDropped](title="packet dropped"; source=packetDropped; record=count,sum(packetBytes),vector(packetBytes); interpolationmode=none);

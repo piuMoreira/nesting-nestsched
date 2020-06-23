@@ -29,6 +29,7 @@ module NestingStandardHost extends StandardHost
         **.interfaceTableModule = default(absPath(".interfaceTable"));
         eth[*].typename = default("EthernetInterface");
         eth[*].qEncap.typename = "EnhancedIeee8021qEncap";
+        eth[*].qEncap.tagTcpTraffic = true;
     submodules:
         oscillator: <default("IdealOscillator")> like IOscillator {
             @display("p=196,211;is=s");
