@@ -21,6 +21,10 @@ HostSchedule<Ieee8021QCtrl>* HostScheduleBuilder::createHostScheduleFromXML(
         cXMLElement *xml, cXMLElement *rootXml) {
     HostSchedule<Ieee8021QCtrl>* schedule = new HostSchedule<Ieee8021QCtrl>();
 
+    if (schedule->size() == 0) {
+        throw cRuntimeError("Tried to load schedule with zero entries");
+    }
+
     // extract cycle time of host
     simtime_t cycle = simTime().parse(
             xml->getFirstChildWithTag("cycle")->getNodeValue());
