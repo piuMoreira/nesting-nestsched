@@ -19,6 +19,7 @@
 #include <omnetpp.h>
 #include <tuple>
 #include <unordered_map>
+#include <set>
 
 #include "inet/linklayer/common/MacAddress.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
@@ -48,6 +49,8 @@ private:
     std::unordered_map<MacAddress, std::pair<simtime_t, std::vector<int>>> adminFdb;
     std::unordered_map<MacAddress, std::pair<simtime_t, std::vector<int>>> operFdb;
 
+    std::set<int> blockedPorts;
+
     bool agingActive = false;
     simtime_t agingThreshold;
 
@@ -60,9 +63,11 @@ protected:
 
     virtual int numInitStages() const override;
 
-    void parseEntries(cXMLElement* xml);
+    virtual void parseEntries(cXMLElement* xml);
 
-    void clearAdminFdb();
+    virtual void parseBlockedPorts(cXMLElement* xml);
+
+    virtual void clearAdminFdb();
 
 public:
     FilteringDatabase(bool agingActive, simtime_t agingTreshold);
@@ -75,7 +80,9 @@ public:
 
     virtual std::vector<int> getDestInterfaceIds(MacAddress macAddress, simtime_t curTS);
 
-    void insert(MacAddress macAddress, simtime_t curTS, int interfaceId);
+    virtual void insert(MacAddress macAddress, simtime_t curTS, int interfaceId);
+
+    virtual bool isInterfaceBlocked(int interfaceId);
 };
 
 } // namespace nesting
