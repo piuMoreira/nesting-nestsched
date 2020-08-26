@@ -17,6 +17,10 @@
 
 #include "inet/common/ModuleAccess.h"
 
+#include <iostream>
+#include <vector>
+#include <sstream>
+
 namespace nesting {
 
 Define_Module(FilteringDatabase);
@@ -44,6 +48,7 @@ void FilteringDatabase::clearAdminFdb()
 void FilteringDatabase::initialize(int stage) {
     if (stage == INITSTAGE_LOCAL) {
         ifTable = check_and_cast<IInterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
+        WATCH_SET(blockedPorts);
     } else if (stage == INITSTAGE_LINK_LAYER) {
         cXMLElement* fdb = par("database");
         loadDatabase(fdb);
@@ -82,6 +87,11 @@ void FilteringDatabase::loadDatabase(cXMLElement* xml) {
         cXMLElement* forwardingXml = staticRules->getFirstChildWithTag("forward");
         if (forwardingXml != nullptr) {
             this->parseEntries(forwardingXml);
+        }
+
+        cXMLElement* blockedPortsXml = staticRules->getFirstChildWithTag("blockedPorts");
+        if (blockedPortsXml != nullptr) {
+            this->parseBlockedPorts(blockedPortsXml);
         }
     }
 
@@ -195,6 +205,18 @@ void FilteringDatabase::parseEntries(cXMLElement* xml) {
     }
 }
 
+void FilteringDatabase::parseBlockedPorts(cXMLElement* xml) {
+    blockedPorts.clear();
+
+    std::string portsString = xml->getAttribute("ports");
+    std::stringstream stream(portsString);
+    while(stream.good()) {
+        std::string substring;
+        std::getline(stream, substring, ',');
+        blockedPorts.insert(atoi(substring.c_str()));
+    }
+}
+
 void FilteringDatabase::handleMessage(cMessage *msg) {
     throw cRuntimeError("Must not receive messages.");
 }
@@ -258,6 +280,13 @@ std::vector<int> FilteringDatabase::getDestInterfaceIds(MacAddress macAddress,
     }
 
     return ports;
+}
+
+bool FilteringDatabase::isInterfaceBlocked(int interfaceId)
+{
+    InterfaceEntry* interfaceEntry = ifTable->getInterfaceById(interfaceId);
+    int portNumber = interfaceEntry->getIndex();
+    return blockedPorts.find(portNumber) != blockedPorts.end();
 }
 
 } // namespace nesting
