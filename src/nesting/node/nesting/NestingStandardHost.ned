@@ -29,6 +29,13 @@ module NestingStandardHost extends StandardHost
         **.interfaceTableModule = default(absPath(".interfaceTable"));
         eth[*].typename = default("EthernetInterface");
         eth[*].qEncap.typename = "EnhancedIeee8021qEncap";
+        mac.typename = "EtherMACFullDuplexPreemptable";
+        mac.mtu = 1500B;
+        queue.typename = "Queuing";
+        queue.tsAlgorithms[*].macModule = absPath(".mac");
+        queue.gateController.macModule = absPath(".mac");
+        queue.numberOfQueues = 1;
+
     submodules:
         oscillator: <default("IdealOscillator")> like IOscillator {
             @display("p=196,211;is=s");
