@@ -61,8 +61,12 @@ module VlanEtherHostSched
                 @display("p=232,283,row,150;q=txQueue");
                 encap.typename = "EtherEncap";
                 qEncap.typename = "EnhancedIeee8021qEncap";
-                mac.typename = "EtherMacFullDuplex";
+                mac.typename = "EtherMACFullDuplexPreemptable";
                 mac.mtu = 1500B;
+                queue.typename = "Queuing";
+                queue.tsAlgorithms[*].macModule = absPath(".mac");
+            	queue.gateController.macModule = absPath(".mac");
+            	queue.numberOfQueues = 1;
         }
     connections:
         trafGenSchedApp.out --> eth.upperLayerIn;
