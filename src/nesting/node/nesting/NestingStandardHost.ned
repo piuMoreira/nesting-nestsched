@@ -16,8 +16,10 @@
 package nesting.node.nesting;
 
 import inet.node.inet.StandardHost;
+import nesting.common.time.IClock;
 import nesting.common.time.IClock2;
 import nesting.common.time.IOscillator;
+//import nesting.linklayer.framePreemption.EtherMACFullDuplexPreemptable;
 
 
 module NestingStandardHost extends StandardHost
@@ -25,16 +27,11 @@ module NestingStandardHost extends StandardHost
     parameters:
         @display("i=device/pc2");
         **.clockModule = default(absPath(".clock"));
+        **.gateController.clockModule = default(absPath(".legacyClock"));
+        **.tGates[*].clockModule = default(absPath(".legacyClock"));
         **.oscillatorModule = default(absPath(".oscillator"));
         **.interfaceTableModule = default(absPath(".interfaceTable"));
-        eth[*].typename = default("EthernetInterface");
-        eth[*].qEncap.typename = "EnhancedIeee8021qEncap";
-        mac.typename = "EtherMACFullDuplexPreemptable";
-        mac.mtu = 1500B;
-        queue.typename = "Queuing";
-        queue.tsAlgorithms[*].macModule = absPath(".mac");
-        queue.gateController.macModule = absPath(".mac");
-        queue.numberOfQueues = 1;
+        eth[*].typename = default("NestingEthernetInterface");
 
     submodules:
         oscillator: <default("IdealOscillator")> like IOscillator {
@@ -42,5 +39,8 @@ module NestingStandardHost extends StandardHost
         }
         clock: <default("RealtimeClock")> like IClock2 {
             @display("p=196,122;is=s");
+        }
+        legacyClock: <default("LegacyClock")> like IClock {
+            @display("p=53,39;is=s");
         }
 }
