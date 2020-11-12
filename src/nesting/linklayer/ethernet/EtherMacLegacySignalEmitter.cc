@@ -46,7 +46,7 @@ void EtherMacLegacySignalEmitter::handleMessage(cMessage *msg)
 
 void EtherMacLegacySignalEmitter::receiveSignal(cComponent *source, simsignal_t signalId, cObject *obj, cObject *details)
 {
-    if (dynamic_cast<EtherMacBase*>(source) != nullptr) {
+    if (dynamic_cast<EtherMacBase*>(source) != nullptr && dynamic_cast<EtherMACFullDuplexPreemptable*>(source) == nullptr) {
         Packet* packet = check_and_cast<Packet*>(obj);
         if (signalId == packetReceivedFromUpperSignal) {
             emit(startTransmissionExpressFrameSignal, packet->getTreeId());
