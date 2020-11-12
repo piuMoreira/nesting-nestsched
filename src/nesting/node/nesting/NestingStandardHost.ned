@@ -16,24 +16,32 @@
 package nesting.node.nesting;
 
 import inet.node.inet.StandardHost;
+import nesting.common.time.IClock;
 import nesting.common.time.IClock2;
 import nesting.common.time.IOscillator;
-
+import nesting.linklayer.ethernet.EtherMacLegacySignalEmitter;
 
 module NestingStandardHost extends StandardHost
 {
     parameters:
         @display("i=device/pc2");
         **.clockModule = default(absPath(".clock"));
+        **.gateController.clockModule = default(absPath(".legacyClock"));
+        **.tGates[*].clockModule = default(absPath(".legacyClock"));
         **.oscillatorModule = default(absPath(".oscillator"));
         **.interfaceTableModule = default(absPath(".interfaceTable"));
-        eth[*].typename = default("EthernetInterface");
-        eth[*].qEncap.typename = "EnhancedIeee8021qEncap";
+        eth[*].typename = default("NestingEthernetInterface");
     submodules:
         oscillator: <default("IdealOscillator")> like IOscillator {
             @display("p=196,211;is=s");
         }
         clock: <default("RealtimeClock")> like IClock2 {
             @display("p=196,122;is=s");
+        }
+        legacySignals: EtherMacLegacySignalEmitter {
+            @display("p=195.29999,296.09998;is=s");
+        }
+        legacyClock: <default("LegacyClock")> like IClock {
+            @display("p=53,39;is=s");
         }
 }
