@@ -22,6 +22,8 @@
 #include "inet/common/packet/Packet.h"
 #include "inet/linklayer/ethernet/EtherEncap.h"
 #include "inet/linklayer/ethernet/EtherFrame_m.h"
+#include "inet/common/ProtocolTag_m.h"
+#include "inet/transportlayer/tcp_common/TcpHeader.h"
 
 namespace nesting {
 
@@ -38,6 +40,7 @@ void EnhancedIeee8021qEncap::initialize(int stage)
         WATCH_MAP(inboundVlanIdMap);
         WATCH_VECTOR(outboundVlanIdFilter);
         WATCH_MAP(outboundVlanIdMap);
+        tagTcpTraffic = par("tagTcpTraffic");
     }
 }
 
@@ -111,6 +114,18 @@ void EnhancedIeee8021qEncap::processPacket(Packet *packet, std::vector<int>& vla
         newVlanId = vlanReq->getVlanId();
         newPcp = vlanReq->getPcp();
         newDe = vlanReq->getDe();
+    }
+    // Tag TCP segments with PCP value equal to port number module 8
+    else if (tagTcpTraffic && packet->getArrivalGate()->isName("upperLayerIn")) {
+        auto transportProtocolInd = packet->findTag<TransportProtocolInd>();
+        if (transportProtocolInd != nullptr) {
+            using namespace inet::tcp;
+            auto tcpHeader = dynamicPtrCast<const TcpHeader, const Chunk>(transportProtocolInd->getTransportProtocolHeader());
+            newPcp = tcpHeader->getDestPort() % 8;
+            if (vlanReq == nullptr) {
+                vlanReq = new EnhancedVlanReq();
+            }
+        }
     }
 
     bool acceptPacket = vlanIdFilter.empty() || std::find(vlanIdFilter.begin(), vlanIdFilter.end(), newVlanId) != vlanIdFilter.end();

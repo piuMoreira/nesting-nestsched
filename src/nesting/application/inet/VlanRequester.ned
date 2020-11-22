@@ -13,29 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package nesting.linklayer.ieee8021q;
-
-import inet.linklayer.ieee8021q.IIeee8021qEncap;
-
+package nesting.application.inet;
 
 //
 // TODO auto-generated module
 //
-simple EnhancedIeee8021qEncap like IIeee8021qEncap
+simple VlanRequester
 {
     parameters:
-        string vlanTagType @enum("c","s") = default("c");
-        string inboundVlanIdFilter = default("");
-        string inboundVlanIdMap = default("");
-        string outboundVlanIdFilter = default("");
-        string outboundVlanIdMap = default("");
-        bool tagTcpTraffic = default(false); // When true tags TCP segments from upper layer with destination port mod 8
-        @display("i=block/cogwheel");
-        @signal[packetDropped](type=inet::Packet);
-        @statistic[packetDropped](title="packet dropped"; source=packetDropped; record=count,sum(packetBytes),vector(packetBytes); interpolationmode=none);
+        int pcp = default(0);
     gates:
         input upperLayerIn;
         output upperLayerOut;
+        
         input lowerLayerIn;
         output lowerLayerOut;
 }

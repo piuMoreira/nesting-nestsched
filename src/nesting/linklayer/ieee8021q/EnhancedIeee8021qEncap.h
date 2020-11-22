@@ -35,6 +35,7 @@ protected:
     std::map<int, int> inboundVlanIdMap;
     std::vector<int> outboundVlanIdFilter;
     std::map<int, int> outboundVlanIdMap;
+    bool tagTcpTraffic;
 
 protected:
     virtual void initialize(int stage) override;
