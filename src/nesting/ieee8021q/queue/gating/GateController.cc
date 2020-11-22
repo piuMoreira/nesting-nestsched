@@ -269,6 +269,10 @@ unsigned int GateController::calculateMaxBit(int gateIndex) {
 void GateController::loadScheduleOrDefault(cXMLElement* xml) {
     Schedule<GateBitvector> *schedule = ScheduleFactory::createGateBitvectorSchedule(xml);
 
+    if (schedule->getControlListLength() == 0) {
+        throw cRuntimeError("Tried to load schedule with zero entries.");
+    }
+
     EV_DEBUG << getFullPath() << ": Loading schedule. Cycle is "
                     << schedule->getCycleTime() << ". Entry count is "
                     << schedule->getControlListLength() << ". Time is "

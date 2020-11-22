@@ -70,7 +70,7 @@ void ForwardingRelayUnit::processBroadcast(Packet* packet, int arrivalInterfaceI
     for (int interfacePos = 0; interfacePos < ifTable->getNumInterfaces(); interfacePos++) {
         InterfaceEntry* destInterface = ifTable->getInterface(interfacePos);
         int destInterfaceId = destInterface->getInterfaceId();
-        if (destInterfaceId != arrivalInterfaceId) {
+        if (destInterfaceId != arrivalInterfaceId && !fdb->isInterfaceBlocked(destInterfaceId)) {
             Packet* dupPacket = packet->dup();
             dupPacket->addTagIfAbsent<InterfaceReq>()->setInterfaceId(destInterfaceId);
             send(dupPacket, gate("ifOut"));
@@ -84,9 +84,9 @@ void ForwardingRelayUnit::processMulticast(Packet* packet, int arrivalInterfaceI
     std::vector<int> destInterfaces = fdb->getDestInterfaceIds(frame->getDest(), simTime());
 
     if (destInterfaces.size() == 0) {
-        EV_WARN << "No configured multicast forwarding entry found for packet "
+        EV_INFO << "No configured multicast forwarding entry found for packet "
                 << packet->getName() << ". Falling back to broadcast!" << std::endl;
-        throw cRuntimeError("Static multicast forwarding for packet didn't work. Entry in forwarding table was empty!");
+        processBroadcast(packet, arrivalInterfaceId);
     } else {
         std::ostringstream strBuffer;
         for (int interfaceIndex = 0; interfaceIndex < destInterfaces.size(); interfaceIndex++) {
@@ -104,8 +104,8 @@ void ForwardingRelayUnit::processMulticast(Packet* packet, int arrivalInterfaceI
         }
         EV_INFO << "Forwarding multicast packet " << packet->getName()
                 << " to interfaces [" << strBuffer.str() << "]" << std::endl;
+        delete packet;
     }
-    delete packet;
 }
 
 void ForwardingRelayUnit::processUnicast(Packet* packet, int arrivalInterfaceId) {
@@ -119,7 +119,7 @@ void ForwardingRelayUnit::processUnicast(Packet* packet, int arrivalInterfaceId)
         EV_INFO << "No unicast forwarding entry for packet " << packet->getName()
                 << " found. Falling back to broadcast!" << std::endl;
         processBroadcast(packet, arrivalInterfaceId);
-    } else {;
+    } else {
         EV_INFO << "Forwarding unicast packet " << packet->getName()
                 << " to interface " << destInterfaceId << std::endl;
         packet->addTagIfAbsent<InterfaceReq>()->setInterfaceId(destInterfaceId);
