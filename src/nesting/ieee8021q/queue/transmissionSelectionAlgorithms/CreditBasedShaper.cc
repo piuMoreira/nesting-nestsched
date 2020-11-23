@@ -101,6 +101,16 @@ simtime_t CreditBasedShaper::zeroCreditTime() {
 }
 
 simtime_t CreditBasedShaper::transmissionTime(Packet* packet) {
+    
+    /*
+     * TODO!
+     * Check whether hard-coded numbers are correct, or whether they can be replaced
+     * by call to packet-method.
+     * If applicable, replace remaining hard-coded number, e.g., in spendCredit() 
+     * for reference, see IEEE Std. 802.3, Sec. 3.1.1 Packet format / Fig. 3.1
+     * (p. 118 in 802.3-2018)
+     */
+
     // Ieee8021q::getFinalEthernet2FrameBitLength(packet) is somehow wrong (1704B instead of correctly 1521B + 8B PHY + IFG)
     int lengthInBits = packet->getBitLength() + (21 + 8 + 12) * 8;
     simtime_t transmissionTime = timeForCredits(getPortTransmitRate(), lengthInBits);
