@@ -113,6 +113,10 @@ The author's version can be retrieved [here](ftp://ftp.informatik.uni-stuttgart.
 } 
 ```
 
+## Related Projects
+### [Automated TSN configuration Plugin](https://gitlab.com/Scipsybee/automated-tsn-configuration-plugin)
+A modular framework to automate offline scheduling in TSN networks to facilitate the design time and pre-simulation automated network configurations as well as interpretation of the simulations, based on NeSTiNg TSN simulation tool in OMNeT++
+
 ## Contribution
 Institute of Parallel and Distributed Systems  
 University of Stuttgart  
