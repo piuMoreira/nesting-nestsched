@@ -5,7 +5,7 @@
 	        	<!-- Forward packets addressed to robotController to robotController -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -15,7 +15,7 @@
 	        	<!-- Forward packets addressed to robotController to switchA -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -25,7 +25,7 @@
 	        	<!-- Forward packets addressed to robotController to switchB -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -35,7 +35,7 @@
 	        	<!-- Forward packets addressed to robotController to switchC -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -45,7 +45,7 @@
 	        	<!-- Forward packets addressed to robotController to switchD -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -55,7 +55,7 @@
 	        	<!-- Forward packets addressed to robotController to switchE -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -65,7 +65,7 @@
 	        	<!-- Forward packets addressed to robotController to switchF -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -75,7 +75,7 @@
 	        	<!-- Forward packets addressed to robotController to switchG -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -85,7 +85,7 @@
 	        	<!-- Forward packets addressed to robotController to switchH -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -95,7 +95,7 @@
 	        	<!-- Forward packets addressed to robotController to switchI -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -105,7 +105,7 @@
 	        	<!-- Forward packets addressed to robotController to switchJ -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -115,7 +115,7 @@
 	        	<!-- Forward packets addressed to robotController to switchK -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1,2" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1 2" />
 	        </forward>
 	    </static>
 	</filteringDatabase>
@@ -125,7 +125,7 @@
 	        	<!-- Forward packets addressed to robotController to switchL -->
 	        	<individualAddress macAddress="00-00-00-00-00-01" port="0" />
 	        	<!-- Forward packets addressed to multicast group 1 -->
-	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0,1" />
+	        	<multicastAddress macAddress="255-0-00-00-00-01" ports="0 1" />
 	        	
 	        </forward>
 	    </static>
