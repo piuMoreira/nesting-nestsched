@@ -80,6 +80,11 @@ protected:
 
     cPar* jitter;
 
+    //Renan
+    uint64_t maxNumberOfPackets = 0;
+    simsignal_t criticalFlowSig[100];
+    simsignal_t noncriticalFlowSig[100];
+
 protected:
     virtual void initialize(int stage) override;
     virtual void sendPacket(uint64_t scheduleIndexTx);

@@ -78,6 +78,15 @@ void VlanEtherTrafGenSched::initialize(int stage) {
         registerService(*L2_PROTOCOL, nullptr, gate("in"));
         registerProtocol(*L2_PROTOCOL, gate("out"), nullptr);
     }
+
+    // Renan
+    for(int i=0; i<100; i++) {
+        std::string s = "criticalFlowSig" + std::to_string(i);
+        criticalFlowSig[i] = cComponent::registerSignal(s.c_str());
+
+        std::string s2 = "noncriticalFlowSig" + std::to_string(i);
+        noncriticalFlowSig[i] = cComponent::registerSignal(s2.c_str());
+    }
 }
 
 int VlanEtherTrafGenSched::numInitStages() const {
@@ -93,56 +102,61 @@ void VlanEtherTrafGenSched::handleMessage(cMessage *msg) {
 }
 
 void VlanEtherTrafGenSched::sendPacket(uint64_t scheduleIndexTx) {
-    // get scheduled control data
-    Ieee8021QCtrl header = currentSchedule->getScheduledObject(scheduleIndexTx % currentSchedule->size());
 
-    // If no sequence number for flow exists create one
-    if (flowIdSeqNums.find(header.flowId) == flowIdSeqNums.end()) {
-        flowIdSeqNums[header.flowId] = 0;
-    }
+//        if(maxNumberOfPackets > 0) {
+            // get scheduled control data
+                    Ieee8021QCtrl header = currentSchedule->getScheduledObject(scheduleIndexTx % currentSchedule->size());
 
-    // Get and increment sequence number
-    uint64_t flowId = header.flowId;
-    uint64_t seqNum = flowIdSeqNums[header.flowId];
-    flowIdSeqNums[header.flowId]++;
+                    // If no sequence number for flow exists create one
+                    if (flowIdSeqNums.find(header.flowId) == flowIdSeqNums.end()) {
+                        flowIdSeqNums[header.flowId] = 0;
+                    }
 
-    char msgname[40];
-    sprintf(msgname, "pk-%d-%d-%d", getId(), flowId, seqNum);
+                    // Get and increment sequence number
+                    uint64_t flowId = header.flowId;
+                    uint64_t seqNum = flowIdSeqNums[header.flowId];
+                    flowIdSeqNums[header.flowId]++;
 
-    // create new packet
-    Packet *datapacket = new Packet(msgname, IEEE802CTRL_DATA);
-    long len = currentSchedule->getSize(scheduleIndexTx % currentSchedule->size());
-    auto payload = makeShared<ByteCountChunk>(B(len));
-    // set creation time
-    auto timeTag = payload->addTag<CreationTimeTag>();
-    timeTag->setCreationTime(simTime());
+                    char msgname[40];
+                    sprintf(msgname, "%d-pk-%d-%d", flowId, getId(), seqNum);
 
-    datapacket->addTagIfAbsent<PacketProtocolTag>()->setProtocol(L2_PROTOCOL);
+                    // create new packet
+                    Packet *datapacket = new Packet(msgname, IEEE802CTRL_DATA);
+                    long len = currentSchedule->getSize(scheduleIndexTx % currentSchedule->size());
+                    auto payload = makeShared<ByteCountChunk>(B(len));
+                    // set creation time
+                    auto timeTag = payload->addTag<CreationTimeTag>();
+                    timeTag->setCreationTime(simTime());
 
-    // create mac control info
-    auto macTag = datapacket->addTag<MacAddressReq>();
-    macTag->setDestAddress(header.macTag.getDestAddress());
-    // create VLAN control info
-    auto vlanReq = datapacket->addTag<EnhancedVlanReq>();
-    vlanReq->setPcp(header.q1Tag.getPcp());
-    vlanReq->setDe(header.q1Tag.getDe());
-    vlanReq->setVlanId(header.q1Tag.getVID());
+                    datapacket->addTagIfAbsent<PacketProtocolTag>()->setProtocol(L2_PROTOCOL);
 
-    // Add flow id to packet meta information
-    auto flowMetaTag = payload->addTagIfAbsent<FlowMetaTag>();
-    flowMetaTag->setFlowId(header.flowId);
-    flowMetaTag->setSeqNum(seqNum);
+                    // create mac control info
+                    auto macTag = datapacket->addTag<MacAddressReq>();
+                    macTag->setDestAddress(header.macTag.getDestAddress());
+                    // create VLAN control info
+                    auto vlanReq = datapacket->addTag<EnhancedVlanReq>();
+                    vlanReq->setPcp(header.q1Tag.getPcp());
+                    vlanReq->setDe(header.q1Tag.getDe());
+                    vlanReq->setVlanId(header.q1Tag.getVID());
 
-    datapacket->insertAtBack(payload);
+                    // Add flow id to packet meta information
+                    auto flowMetaTag = payload->addTagIfAbsent<FlowMetaTag>();
+                    flowMetaTag->setFlowId(header.flowId);
+                    flowMetaTag->setSeqNum(seqNum);
 
-    EV_TRACE << getFullPath() << ": Send TSN packet '" << datapacket->getName()
-                    << "' at time " << clock->getTime().inUnit(SIMTIME_US)
-                    << endl;
+                    datapacket->insertAtBack(payload);
 
-    send(datapacket, "out");
-    TSNpacketsSent++;
-    emit(sentPkSignal, datapacket);
-    emit(sentPkTreeIdSignal, datapacket->getTreeId());
+                    EV_TRACE << getFullPath() << ": Send TSN packet '" << datapacket->getName()
+                                    << "' at time " << clock->getTime().inUnit(SIMTIME_US)
+                                    << endl;
+
+                    send(datapacket, "out");
+                    TSNpacketsSent++;
+                    emit(sentPkSignal, datapacket);
+                    emit(sentPkTreeIdSignal, datapacket->getTreeId());
+
+//                    maxNumberOfPackets--;
+//        }
 }
 
 void VlanEtherTrafGenSched::receivePacket(Packet *pkt) {
@@ -153,6 +167,12 @@ void VlanEtherTrafGenSched::receivePacket(Packet *pkt) {
     packetsReceived++;
     emit(rcvdPkSignal, pkt);
     emit(rcvdPkTreeIdSignal, pkt->getTreeId());
+    int senderKind = pkt->getKind();
+    if(senderKind == NONCRITICALFLOW) {
+        emit(noncriticalFlowSig[atoi(pkt->getName())], pkt);
+    } else {
+        emit(criticalFlowSig[atoi(pkt->getName())], pkt);
+    }
     delete pkt;
 }
 
@@ -217,6 +237,9 @@ void VlanEtherTrafGenSched::loadScheduleOrDefault(cXMLElement* xml) {
                 && hostxml->getAttribute("name") == hostName) {
             schedule = HostScheduleBuilder::createHostScheduleFromXML(hostxml,
                     xml);
+
+            //Renan
+//            maxNumberOfPackets = atoi(hostxml->getAttribute("max"));
 
             EV_DEBUG << getFullPath() << ": Found schedule for name "
                             << hostName << endl;

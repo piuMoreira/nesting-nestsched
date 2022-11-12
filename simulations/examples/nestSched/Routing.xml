@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<filteringDatabases>
+  <filteringDatabase id="switch0">
+    <static>
+      <forward>
+        <!--Forward packets addressed to flow1 to switch2-->
+        <!--Forward packets addressed to flow4 to dev0-->
+        <!--Forward packets addressed to flow7 to dev0-->
+        <!--Forward packets addressed to flow10 to dev0-->
+        <multicastAddress macAddress="255-0-00-00-00-01" ports="0"/>
+        <multicastAddress macAddress="255-0-00-00-00-04" ports="1"/>
+        <multicastAddress macAddress="255-0-00-00-00-07" ports="1"/>
+        <multicastAddress macAddress="255-0-00-00-00-10" ports="1"/>
+        <individualAddress macAddress="00-00-00-00-00-01" port="1" />
+      </forward>
+    </static>
+  </filteringDatabase>
+  <filteringDatabase id="switch1">
+    <static>
+      <forward>
+        <!--Forward packets addressed to flow4 to switch2-->
+        <!--Forward packets addressed to flow3 to dev1-->
+        <!--Forward packets addressed to flow2 to dev3-->
+        <multicastAddress macAddress="255-0-00-00-00-04" ports="0"/>
+        <multicastAddress macAddress="255-0-00-00-00-03" ports="1"/>
+        <multicastAddress macAddress="255-0-00-00-00-02" ports="3"/>
+        <individualAddress macAddress="00-00-00-00-00-03" port="2" />
+        <individualAddress macAddress="00-00-00-00-00-01" port="0" />
+      </forward>
+    </static>
+  </filteringDatabase>
+  <filteringDatabase id="switch2">
+    <static>
+      <forward>
+        <!--Forward packets addressed to flow4 to switch0-->
+        <!--Forward packets addressed to flow7 to switch0-->
+        <!--Forward packets addressed to flow10 to switch0-->
+        <!--Forward packets addressed to flow6 to dev4-->
+        <!--Forward packets addressed to flow1 to dev5-->
+        <!--Forward packets addressed to flow5 to dev6-->
+        <multicastAddress macAddress="255-0-00-00-00-04" ports="0"/>
+        <multicastAddress macAddress="255-0-00-00-00-07" ports="0"/>
+        <multicastAddress macAddress="255-0-00-00-00-10" ports="0"/>
+        <multicastAddress macAddress="255-0-00-00-00-06" ports="3"/>
+        <multicastAddress macAddress="255-0-00-00-00-01" ports="4"/>
+        <multicastAddress macAddress="255-0-00-00-00-05" ports="5"/>
+        <individualAddress macAddress="00-00-00-00-00-06" port="4" />
+        <individualAddress macAddress="00-00-00-00-00-01" port="0" />
+      </forward>
+    </static>
+  </filteringDatabase>
+  <filteringDatabase id="switch3">
+    <static>
+      <forward>
+        <!--Forward packets addressed to flow10 to switch2-->
+        <!--Forward packets addressed to flow9 to dev7-->
+        <!--Forward packets addressed to flow8 to dev9-->
+        <multicastAddress macAddress="255-0-00-00-00-10" ports="0"/>
+        <multicastAddress macAddress="255-0-00-00-00-09" ports="1"/>
+        <multicastAddress macAddress="255-0-00-00-00-08" ports="3"/>
+        <individualAddress macAddress="00-00-00-00-00-09" port="2" />
+        <individualAddress macAddress="00-00-00-00-00-01" port="0" />
+      </forward>
+    </static>
+  </filteringDatabase>
+</filteringDatabases>

@@ -139,6 +139,7 @@ void TransmissionGate::setGateState(bool gateOpen, bool release) {
     } else if(release && gateOpen && !tsAlgorithm->isEmpty(maxTransferableBits()) && (isExpressQueue() || !gateController->currentlyOnHold())) {
         transmissionSelection->packetEnqueued(this);
     }
+
 }
 
 bool TransmissionGate::isEmpty() {
