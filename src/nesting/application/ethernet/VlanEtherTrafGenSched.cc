@@ -103,7 +103,7 @@ void VlanEtherTrafGenSched::handleMessage(cMessage *msg) {
 
 void VlanEtherTrafGenSched::sendPacket(uint64_t scheduleIndexTx) {
 
-//        if(maxNumberOfPackets > 0) {
+        if(maxNumberOfPackets > 0) {
             // get scheduled control data
                     Ieee8021QCtrl header = currentSchedule->getScheduledObject(scheduleIndexTx % currentSchedule->size());
 
@@ -155,8 +155,8 @@ void VlanEtherTrafGenSched::sendPacket(uint64_t scheduleIndexTx) {
                     emit(sentPkSignal, datapacket);
                     emit(sentPkTreeIdSignal, datapacket->getTreeId());
 
-//                    maxNumberOfPackets--;
-//        }
+                    maxNumberOfPackets--;
+        }
 }
 
 void VlanEtherTrafGenSched::receivePacket(Packet *pkt) {
@@ -239,7 +239,7 @@ void VlanEtherTrafGenSched::loadScheduleOrDefault(cXMLElement* xml) {
                     xml);
 
             //Renan
-//            maxNumberOfPackets = atoi(hostxml->getAttribute("max"));
+            maxNumberOfPackets = atoi(hostxml->getAttribute("max"));
 
             EV_DEBUG << getFullPath() << ": Found schedule for name "
                             << hostName << endl;
