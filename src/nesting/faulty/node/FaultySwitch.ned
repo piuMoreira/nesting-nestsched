@@ -29,7 +29,7 @@ import nesting.ieee8021q.relay.FilteringDatabase;
 //
 // This module implements a switch that supports frame preemption.
 //
-module Faultyswitch
+module FaultySwitch
 {
     parameters:
         @networkNode();

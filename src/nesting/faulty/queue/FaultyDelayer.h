@@ -30,13 +30,13 @@ namespace nesting {
 class FaultyDelayer : public inet::cSimpleModule
 {
   public:
-    FaultyDelayer() { delayPar = nullptr; }
+    FaultyDelayer() { delayRngPar = nullptr; }
 
   protected:
     virtual void initialize() override;
     virtual void handleMessage(inet::cMessage *msg) override;
 
-    inet::cPar *delayPar;
+    inet::cPar *delayRngPar;
 
     static inet::simsignal_t delaySignal;
 };

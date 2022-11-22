@@ -3,6 +3,7 @@ package nesting.simulations.examples.nestSched;
 import ned.DatarateChannel;
 import nesting.node.ethernet.VlanEtherSwitchPreemptable;
 import nesting.node.ethernet.VlanEtherHostNC;
+import nesting.faulty.node.FaultySwitch;
 
 network nestSched
 {
@@ -18,7 +19,7 @@ network nestSched
         dev0: NestSchedDev {
             @display("p=244,71");
         }
-        switch0: VlanEtherSwitchPreemptable {
+        switch0: FaultySwitch {
             parameters:
                 @display("p=244,127");
             gates:
@@ -42,7 +43,7 @@ network nestSched
         ncdev2: VlanEtherHostNC {
             @display("p=71,303");
         }
-        switch1: VlanEtherSwitchPreemptable {
+        switch1: FaultySwitch {
             parameters:
                 @display("p=153,185");
             gates:
@@ -66,7 +67,7 @@ network nestSched
         ncdev4: VlanEtherHostNC {
             @display("p=283,354");
         }
-        switch2: VlanEtherSwitchPreemptable {
+        switch2: FaultySwitch {
             parameters:
                 @display("p=244,185");
             gates:
@@ -90,7 +91,7 @@ network nestSched
         ncdev6: VlanEtherHostNC {
             @display("p=400,303");
         }
-        switch3: VlanEtherSwitchPreemptable {
+        switch3: FaultySwitch {
             parameters:
                 @display("p=335,185");
             gates:

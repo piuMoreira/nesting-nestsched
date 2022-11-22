@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <schedules>
   <defaultcycle>800.0us</defaultcycle>
-  <host max="1" name="dev9">
+  <host max="100" name="dev9">
     <cycle>800.0us</cycle>
     <entry>
       <start>0.0us</start>

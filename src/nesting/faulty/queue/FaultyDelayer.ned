@@ -25,7 +25,7 @@ import inet.common.IHook;
 simple FaultyDelayer like IHook
 {
     parameters:
-        volatile double delay @unit(s) = default(500us);    // delay [seconds] e.g. uniform(20ms,40ms)
+        int delayRng = default(500);				//The max value the delay can have in us
         @display("i=block/timer");
         @signal[packetReceived](type=cMessage);
         @signal[packetSent](type=cMessage);

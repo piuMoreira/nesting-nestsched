@@ -14,21 +14,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
-// @author: Zoltan Bojthe
+// @author: Renan Silva
 //
 
 #include "inet/common/Simsignals.h"
 #include "nesting/faulty/queue/FaultyDelayer.h"
+#include <random>
+#include <iostream>
 
 namespace nesting {
 
 Define_Module(FaultyDelayer);
 
 inet::simsignal_t FaultyDelayer::delaySignal = registerSignal("delay");
+inet::simtime_t dPar;
+
 
 void FaultyDelayer::initialize()
 {
-    delayPar = &par("delay");
+    delayRngPar = &par("delayRng");
+
 }
 
 void FaultyDelayer::handleMessage(inet::cMessage *msg)
@@ -38,11 +43,17 @@ void FaultyDelayer::handleMessage(inet::cMessage *msg)
         send(msg, "out");
     }
     else {
+        std::random_device rd{}; // use to seed the rng
+        std::mt19937 rng{rd()}; // rng
+        std::uniform_int_distribution<int> distribution(0,delayRngPar->intValue());
+        float rand = (float) distribution(rng)/1000000;
+        dPar = (inet::simtime_t) rand;
+
         emit(inet::packetReceivedSignal, msg);
 
-        inet::simtime_t delay(*delayPar);
-        emit(delaySignal, delay);
-        scheduleAt(inet::simTime() + delay, msg);
+        inet::simtime_t delay(dPar);
+        emit(delaySignal, dPar);
+        scheduleAt(inet::simTime() + dPar, msg);
     }
 }
 
