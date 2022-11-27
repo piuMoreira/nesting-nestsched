@@ -19,8 +19,7 @@
 
 #include "inet/common/Simsignals.h"
 #include "nesting/faulty/queue/FaultyDelayer.h"
-#include <random>
-#include <iostream>
+#include "nesting/faulty/common/distributions/Distributions.h"
 
 namespace nesting {
 
@@ -28,7 +27,7 @@ Define_Module(FaultyDelayer);
 
 inet::simsignal_t FaultyDelayer::delaySignal = registerSignal("delay");
 inet::simtime_t dPar;
-
+Distributions distr;
 
 void FaultyDelayer::initialize()
 {
@@ -43,17 +42,24 @@ void FaultyDelayer::handleMessage(inet::cMessage *msg)
         send(msg, "out");
     }
     else {
-        std::random_device rd{}; // use to seed the rng
-        std::mt19937 rng{rd()}; // rng
-        std::uniform_int_distribution<int> distribution(0,delayRngPar->intValue());
-        float rand = (float) distribution(rng)/1000000;
-        dPar = (inet::simtime_t) rand;
+        int isFaulty = distr.uniformDistribution(100);
+        if (isFaulty == 1) {
+            int x = distr.uniformDistribution(delayRngPar->intValue());
+            float rand = (float) x/1000000;
+            dPar = (inet::simtime_t) rand;
+            emit(inet::packetReceivedSignal, msg);
 
-        emit(inet::packetReceivedSignal, msg);
+            inet::simtime_t delay(dPar);
+            emit(delaySignal, dPar);
+            scheduleAt(inet::simTime() + dPar, msg);
+        } else {
+            dPar = 0;
+            emit(inet::packetReceivedSignal, msg);
 
-        inet::simtime_t delay(dPar);
-        emit(delaySignal, dPar);
-        scheduleAt(inet::simTime() + dPar, msg);
+            inet::simtime_t delay(dPar);
+            emit(delaySignal, dPar);
+            scheduleAt(inet::simTime() + dPar, msg);
+        }
     }
 }
 
