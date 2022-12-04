@@ -12,6 +12,7 @@ simple EtherMACFullDuplexPreemptable extends EtherMacFullDuplex like IEtherMac
     parameters:
         @class(EtherMACFullDuplexPreemptable);
         bool enablePreemptingFrames = default(false); // frame preemption off or on
+        int dropProbability = default(0);  //Probability to drop a packet
         @signal[preemptCurrentFrameSignal](type=long); // type=unique packet id
         @signal[transmittedExpressFrameSignal](type=long); // type=unique packet id
         @signal[startTransmissionExpressFrameSignal](type=long); // type=unique packet id

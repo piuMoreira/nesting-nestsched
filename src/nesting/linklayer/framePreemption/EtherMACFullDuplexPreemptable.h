@@ -44,6 +44,7 @@ private:
     cMessage *recheckForQueuedExpressFrameMsg = nullptr;
     cMessage *preemptCurrentFrameMsg = nullptr;
 
+    inet::cPar *dropProbabilityPar;
     //cMessage recheckForQueuedExpressFrameMsg = cMessage("RecheckForQueuedExpressFrame");
     //cMessage preemptCurrentFrameMsg = cMessage("preemptCurrentFrame");
 //    cMessage *recheckForQueuedExpressFrameMsg = nullptr;
