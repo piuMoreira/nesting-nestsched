@@ -1,19 +1,4 @@
 //
-// Copyright (C) 2012 OpenSim Ltd
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with this program; if not, see <http://www.gnu.org/licenses/>.
-//
 // @author: Renan Silva
 //
 
@@ -32,6 +17,7 @@ Distributions distr;
 void FaultyDelayer::initialize()
 {
     delayRngPar = &par("delayRng");
+    faultProbPar = &par("faultProb");
 
 }
 
@@ -43,7 +29,7 @@ void FaultyDelayer::handleMessage(inet::cMessage *msg)
     }
     else {
         int isFaulty = distr.uniformDistribution(100);
-        if (isFaulty == 1) {
+        if (isFaulty == faultProbPar->intValue()) {
             int x = distr.uniformDistribution(delayRngPar->intValue());
             float rand = (float) x/1000000;
             dPar = (inet::simtime_t) rand;
