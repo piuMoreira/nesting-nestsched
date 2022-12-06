@@ -29,7 +29,7 @@ void FaultyDelayer::handleMessage(inet::cMessage *msg)
     }
     else {
         int isFaulty = distr.uniformDistribution(100);
-        if (isFaulty == faultProbPar->intValue()) {
+        if (isFaulty <= faultProbPar->intValue() && faultProbPar->intValue() != 0) {
             int x = distr.uniformDistribution(delayRngPar->intValue());
             float rand = (float) x/1000000;
             dPar = (inet::simtime_t) rand;

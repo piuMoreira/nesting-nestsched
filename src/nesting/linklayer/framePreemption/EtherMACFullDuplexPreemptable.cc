@@ -97,7 +97,7 @@ void EtherMACFullDuplexPreemptable::handleMessageWhenUp(cMessage *msg) {
         handleSelfMessage(msg);
     } else if (msg->arrivedOn("upperLayerIn")) {
         int isFaulty = distri.uniformDistribution(100);
-        if (isFaulty == dropProbabilityPar->intValue()) {
+        if (isFaulty <= dropProbabilityPar->intValue() && dropProbabilityPar->intValue() != 0) {
             Packet* packet = check_and_cast<Packet *>(msg);
             EV_WARN
                            << " -- dropping packet " << packet << endl;

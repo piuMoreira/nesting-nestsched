@@ -25,6 +25,9 @@ simple VlanEtherTrafGenSched
         string clockModule = default("^.clock");
         string hostModule = default("^");
         volatile double jitter @unit(s) = default(0s); // random time, for which transmission of packet can be delayed.
+        
+        int dropAtStartProb = default(0);
+        int dropAtEndProb = default(0);
 
         @signal[sentPk](type=inet::Packet);
         @signal[rcvdPk](type=inet::Packet);
