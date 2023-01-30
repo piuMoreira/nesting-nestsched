@@ -20,13 +20,11 @@
 #include "inet/common/queue/IPassiveQueue.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 
-#include "nesting/faulty/common/distributions/Distributions.h"
 
 namespace nesting {
 
 Define_Module(EtherMACFullDuplexPreemptable);
 
-Distributions distri;
 
 simsignal_t EtherMACFullDuplexPreemptable::preemptCurrentFrameSignal =
         registerSignal("preemptCurrentFrameSignal");
@@ -69,7 +67,6 @@ EtherMACFullDuplexPreemptable::~EtherMACFullDuplexPreemptable() {
 void EtherMACFullDuplexPreemptable::initialize(int stage) {
     EtherMacFullDuplex::initialize(stage);
 
-    dropProbabilityPar = &par("dropProbability");
     if (stage == INITSTAGE_LOCAL) {
         cModule* queueModule = getModuleFromPar<cModule>(par("queueModule"), this);
         if (queueModule->isSimple()) {
@@ -96,22 +93,7 @@ void EtherMACFullDuplexPreemptable::handleMessageWhenUp(cMessage *msg) {
     if (msg->isSelfMessage()) {
         handleSelfMessage(msg);
     } else if (msg->arrivedOn("upperLayerIn")) {
-        int isFaulty = distri.uniformDistribution(100);
-        if (isFaulty <= dropProbabilityPar->intValue() && dropProbabilityPar->intValue() != 0) {
-            Packet* packet = check_and_cast<Packet *>(msg);
-            EV_WARN
-                           << " -- dropping packet " << packet << endl;
-            PacketDropDetails details;
-            //details.setReason(INTERFACE_DOWN);
-            //emit(packetDroppedSignal, packet->getTreeId(), &details);
-            numDroppedPkFromHLIfaceDown++;
-            delete packet;
-
-            //requestNextFrameFromExtQueue();
-            return;
-        } else {
-            handleUpperPacket(check_and_cast<Packet *>(msg));
-        }
+        handleUpperPacket(check_and_cast<Packet *>(msg));
     } else if (msg->getArrivalGate() == physInGate) {
         // from phys
         PreemptedFrame* pFrame = dynamic_cast<PreemptedFrame*>(msg);

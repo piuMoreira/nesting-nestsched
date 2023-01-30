@@ -38,13 +38,12 @@ class TransmissionSelection;
  */
 class EtherMACFullDuplexPreemptable: public EtherMacFullDuplex,
         public IPassiveQueueListener {
-private:
+protected:
     TransmissionSelection* transmissionSelectionModule;
 
     cMessage *recheckForQueuedExpressFrameMsg = nullptr;
     cMessage *preemptCurrentFrameMsg = nullptr;
 
-    inet::cPar *dropProbabilityPar;
     //cMessage recheckForQueuedExpressFrameMsg = cMessage("RecheckForQueuedExpressFrame");
     //cMessage preemptCurrentFrameMsg = cMessage("preemptCurrentFrame");
 //    cMessage *recheckForQueuedExpressFrameMsg = nullptr;
@@ -70,7 +69,7 @@ private:
     virtual simtime_t isPreemptionLaterPossible();
     virtual simtime_t calculateTransmissionDuration(int bytes);
     virtual void preemptCurrentFrame();
-protected:
+
     static simsignal_t preemptCurrentFrameSignal;
     static simsignal_t transmittedExpressFrameSignal;
     static simsignal_t startTransmissionExpressFrameSignal;

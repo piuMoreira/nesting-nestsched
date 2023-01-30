@@ -43,7 +43,7 @@ module FaultySwitch
         inout ethg[];
     submodules:
         eth[sizeof(ethg)]: EthernetInterface {
-            mac.typename = "EtherMACFullDuplexPreemptable";
+            mac.typename = "FaultyMACFullDuplexPreemptable";
             encap.typename = "EtherEncapDummy";
             qEncap.typename = "Ieee8021qEncap";
             queue.typename = "Queuing";
