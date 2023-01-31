@@ -79,8 +79,6 @@ protected:
     std::map<uint64_t, uint64_t> flowIdSeqNums;
 
     cPar* jitter;
-    cPar* dropAtStartProbPar;
-    cPar* dropAtEndProbPar;
 
     //Renan
     uint64_t maxNumberOfPackets = 0;

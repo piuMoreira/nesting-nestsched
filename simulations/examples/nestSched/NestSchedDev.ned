@@ -1,8 +1,8 @@
 package nesting.simulations.examples.nestSched;
 
-import nesting.node.ethernet.VlanEtherHostSched;
+import nesting.faulty.node.FaultyHost;
 
-module NestSchedDev extends VlanEtherHostSched {
+module NestSchedDev extends FaultyHost {
 	@signal[criticalFlowSig1](type=inet::Packet);
 	@statistic[criticalFlowSig1Received](title="criticalFlowSig1Received"; source="dataAge(criticalFlowSig1)"; unit=s; record=histogram,vector; interpolationmode=linear);
 

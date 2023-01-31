@@ -28,13 +28,11 @@
 #include <algorithm>
 #include <string.h>
 
-#include "nesting/faulty/common/distributions/Distributions.h"
 
 namespace nesting {
 
 Define_Module(VlanEtherTrafGenSched);
 
-Distributions distrib;
 
 const Protocol* VlanEtherTrafGenSched::L2_PROTOCOL = &Protocol::nextHopForwarding;
 
@@ -55,8 +53,6 @@ void VlanEtherTrafGenSched::initialize(int stage) {
         rcvdPkTreeIdSignal = registerSignal("rcvdPkTreeId");
 
         jitter = &par("jitter");
-        dropAtStartProbPar = &par("dropAtStartProb");
-        dropAtEndProbPar = &par("dropAtEndProb");
 
         WATCH_MAP(flowIdSeqNums);
 
@@ -103,76 +99,66 @@ void VlanEtherTrafGenSched::handleMessage(cMessage *msg) {
     if (msg->isSelfMessage()) {
         sendDelayed(msg);
     } else {
-        int isFaulty = distrib.uniformDistribution(100);
-        if (isFaulty <= dropAtEndProbPar->intValue() && dropAtEndProbPar->intValue() != 0) {
-            return;
-        } else {
-            receivePacket(check_and_cast<Packet *>(msg));
-        }
+        receivePacket(check_and_cast<Packet *>(msg));
     }
 }
 
 void VlanEtherTrafGenSched::sendPacket(uint64_t scheduleIndexTx) {
-    int isFaulty = distrib.uniformDistribution(100);
-    if (isFaulty <= dropAtStartProbPar->intValue() && dropAtStartProbPar->intValue() != 0) {
-        maxNumberOfPackets--;
-    } else {
-        if(maxNumberOfPackets > 0) {
+    if(maxNumberOfPackets > 0) {
 
-            // get scheduled control data
-            Ieee8021QCtrl header = currentSchedule->getScheduledObject(scheduleIndexTx % currentSchedule->size());
+        // get scheduled control data
+        Ieee8021QCtrl header = currentSchedule->getScheduledObject(scheduleIndexTx % currentSchedule->size());
 
-            // If no sequence number for flow exists create one
-            if (flowIdSeqNums.find(header.flowId) == flowIdSeqNums.end()) {
-                flowIdSeqNums[header.flowId] = 0;
-            }
-
-            // Get and increment sequence number
-            uint64_t flowId = header.flowId;
-            uint64_t seqNum = flowIdSeqNums[header.flowId];
-            flowIdSeqNums[header.flowId]++;
-
-            char msgname[40];
-            sprintf(msgname, "%d-pk-%d-%d", flowId, getId(), seqNum);
-
-            // create new packet
-            Packet *datapacket = new Packet(msgname, IEEE802CTRL_DATA);
-            long len = currentSchedule->getSize(scheduleIndexTx % currentSchedule->size());
-            auto payload = makeShared<ByteCountChunk>(B(len));
-            // set creation time
-            auto timeTag = payload->addTag<CreationTimeTag>();
-            timeTag->setCreationTime(simTime());
-
-            datapacket->addTagIfAbsent<PacketProtocolTag>()->setProtocol(L2_PROTOCOL);
-
-            // create mac control info
-            auto macTag = datapacket->addTag<MacAddressReq>();
-            macTag->setDestAddress(header.macTag.getDestAddress());
-            // create VLAN control info
-            auto vlanReq = datapacket->addTag<EnhancedVlanReq>();
-            vlanReq->setPcp(header.q1Tag.getPcp());
-            vlanReq->setDe(header.q1Tag.getDe());
-            vlanReq->setVlanId(header.q1Tag.getVID());
-
-            // Add flow id to packet meta information
-            auto flowMetaTag = payload->addTagIfAbsent<FlowMetaTag>();
-            flowMetaTag->setFlowId(header.flowId);
-            flowMetaTag->setSeqNum(seqNum);
-
-            datapacket->insertAtBack(payload);
-
-            EV_TRACE << getFullPath() << ": Send TSN packet '" << datapacket->getName()
-                            << "' at time " << clock->getTime().inUnit(SIMTIME_US)
-                            << endl;
-
-            send(datapacket, "out");
-            TSNpacketsSent++;
-            emit(sentPkSignal, datapacket);
-            emit(sentPkTreeIdSignal, datapacket->getTreeId());
-
-            maxNumberOfPackets--;
-
+        // If no sequence number for flow exists create one
+        if (flowIdSeqNums.find(header.flowId) == flowIdSeqNums.end()) {
+            flowIdSeqNums[header.flowId] = 0;
         }
+
+        // Get and increment sequence number
+        uint64_t flowId = header.flowId;
+        uint64_t seqNum = flowIdSeqNums[header.flowId];
+        flowIdSeqNums[header.flowId]++;
+
+        char msgname[40];
+        sprintf(msgname, "%d-pk-%d-%d", flowId, getId(), seqNum);
+
+        // create new packet
+        Packet *datapacket = new Packet(msgname, IEEE802CTRL_DATA);
+        long len = currentSchedule->getSize(scheduleIndexTx % currentSchedule->size());
+        auto payload = makeShared<ByteCountChunk>(B(len));
+        // set creation time
+        auto timeTag = payload->addTag<CreationTimeTag>();
+        timeTag->setCreationTime(simTime());
+
+        datapacket->addTagIfAbsent<PacketProtocolTag>()->setProtocol(L2_PROTOCOL);
+
+        // create mac control info
+        auto macTag = datapacket->addTag<MacAddressReq>();
+        macTag->setDestAddress(header.macTag.getDestAddress());
+        // create VLAN control info
+        auto vlanReq = datapacket->addTag<EnhancedVlanReq>();
+        vlanReq->setPcp(header.q1Tag.getPcp());
+        vlanReq->setDe(header.q1Tag.getDe());
+        vlanReq->setVlanId(header.q1Tag.getVID());
+
+        // Add flow id to packet meta information
+        auto flowMetaTag = payload->addTagIfAbsent<FlowMetaTag>();
+        flowMetaTag->setFlowId(header.flowId);
+        flowMetaTag->setSeqNum(seqNum);
+
+        datapacket->insertAtBack(payload);
+
+        EV_TRACE << getFullPath() << ": Send TSN packet '" << datapacket->getName()
+                        << "' at time " << clock->getTime().inUnit(SIMTIME_US)
+                        << endl;
+
+        send(datapacket, "out");
+        TSNpacketsSent++;
+        emit(sentPkSignal, datapacket);
+        emit(sentPkTreeIdSignal, datapacket->getTreeId());
+
+        maxNumberOfPackets--;
+
     }
 }
 
