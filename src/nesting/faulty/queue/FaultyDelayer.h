@@ -23,6 +23,7 @@ class FaultyDelayer : public inet::cSimpleModule
 
     inet::cPar *delayRngPar;
     inet::cPar *faultProbPar;
+    inet::cPar* probDistribution;
 
     static inet::simsignal_t delaySignal;
 };

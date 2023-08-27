@@ -16,10 +16,11 @@ void FaultyMACFullDuplexPreemptable::initialize(int stage) {
     EtherMACFullDuplexPreemptable::initialize(stage);
 
     dropProbabilityPar = &par("dropProbability");
+    probDistribution = &par("probDistribution");
 }
 
 void FaultyMACFullDuplexPreemptable::handleMessageWhenUp(cMessage *msg) {
-    int isFaulty = distri.uniformDistribution(100);
+    int isFaulty = distri.distributionRun(probDistribution->intValue(), 100);
     if (msg->arrivedOn("upperLayerIn") && isFaulty <= dropProbabilityPar->intValue() && dropProbabilityPar->intValue() != 0){
             Packet* packet = check_and_cast<Packet *>(msg);
             EV_WARN

@@ -11,6 +11,7 @@ class FaultyMACFullDuplexPreemptable: public EtherMACFullDuplexPreemptable{
 
 protected:
     inet::cPar *dropProbabilityPar;
+    inet::cPar* probDistribution;
     virtual void initialize(int stage) override;
     virtual void handleMessageWhenUp(cMessage *msg) override;
 

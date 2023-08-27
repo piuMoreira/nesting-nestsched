@@ -12,6 +12,7 @@ simple FaultyDelayer like IHook
     parameters:
         int delayRng = default(500);				//The max value the delay can have in us
         int faultProb = default (0);           		//Probability to a fault occur in the delayer
+        int probDistribution = default(1);
         @display("i=block/timer");
         @signal[packetReceived](type=cMessage);
         @signal[packetSent](type=cMessage);

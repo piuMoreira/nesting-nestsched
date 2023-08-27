@@ -18,6 +18,7 @@ void FaultyDelayer::initialize()
 {
     delayRngPar = &par("delayRng");
     faultProbPar = &par("faultProb");
+    probDistribution = &par("probDistribution");
 
 }
 
@@ -28,7 +29,7 @@ void FaultyDelayer::handleMessage(inet::cMessage *msg)
         send(msg, "out");
     }
     else {
-        int isFaulty = distr.uniformDistribution(100);
+        int isFaulty = distr.distributionRun(probDistribution->intValue(), 100);
         if (isFaulty <= faultProbPar->intValue() && faultProbPar->intValue() != 0) {
             int x = distr.uniformDistribution(delayRngPar->intValue());
             float rand = (float) x/1000000;

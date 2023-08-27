@@ -8,4 +8,5 @@ simple FaultyTrafGen extends VlanEtherTrafGenSched
         @class(FaultyTrafGen);
         int dropAtStartProb = default(0);
         int dropAtEndProb = default(0);
+        int probDistribution = default(1);
 }

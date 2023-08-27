@@ -13,6 +13,7 @@ class FaultyTrafGen: public VlanEtherTrafGenSched {
 protected:
     inet::cPar* dropAtStartProbPar;
     inet::cPar* dropAtEndProbPar;
+    inet::cPar* probDistribution;
 
     virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg) override;
